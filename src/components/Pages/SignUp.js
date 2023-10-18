@@ -1,8 +1,9 @@
-
 import classes from './SignUp.module.css'
 
 import React, { Fragment, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { authAction } from '../storeRedux/authReducer';
 
 const SignUp = () => {
     const [email,setemail]=useState('');
@@ -10,12 +11,16 @@ const SignUp = () => {
     const [confPass,setconfPass]=useState('')
     const [isCursorAllow,SetisCursorAllow]=useState(true)
     const [isLogin,setIsLogin]=useState(true);
+    const redirect=useNavigate();
+
+    const dispatch=useDispatch()
 
     const emailChangeHandler =(e)=>{
         setemail(e.target.value)
     }
 const passwordChangeHandler =(e)=>{
     setpassword(e.target.value)
+    SetisCursorAllow(false)
 }
 
     const confPassChangeHandler =(e)=>{
@@ -29,14 +34,15 @@ const passwordChangeHandler =(e)=>{
 
     const submitHandler = async(e)=>{
         e.preventDefault()
-        if(confPass!==password){
+      if(!isLogin){ 
+         if(confPass!==password){
             return alert('Confirm password and password is not same');
-        }
+        }}
         let url;
-        if(!isLogin){
-            url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBQ6bTtVBaFvjcG7dc8ukqQSjqGkRF4ivY';
+        if(isLogin){
+            url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCGU_Jh9DkFE0kC10gMbuAFtAM1Sz33lvM';
         }else{
-            url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?keyy=AIzaSyBQ6bTtVBaFvjcG7dc8ukqQSjqGkRF4ivY';
+            url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCGU_Jh9DkFE0kC10gMbuAFtAM1Sz33lvM';
         }
       
         const singUp=await fetch(url,{
@@ -56,6 +62,9 @@ const passwordChangeHandler =(e)=>{
         }else{
             localStorage.setItem('token',data.idToken);
             console.log('sign up successfully');
+            localStorage.setItem('email',email.replace(/[@.]/g,''))
+            dispatch(authAction.login())
+            redirect('/')
         }
       
     }
