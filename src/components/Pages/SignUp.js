@@ -1,3 +1,4 @@
+
 import classes from './SignUp.module.css'
 
 import React, { Fragment, useState } from 'react'
@@ -62,7 +63,7 @@ const passwordChangeHandler =(e)=>{
         }else{
             localStorage.setItem('token',data.idToken);
             console.log('sign up successfully');
-            localStorage.setItem('email',email.replace(/[@.]/g,''))
+            localStorage.setItem('email',email)
             dispatch(authAction.login())
             redirect('/')
         }

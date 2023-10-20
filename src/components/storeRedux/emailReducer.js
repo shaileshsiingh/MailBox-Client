@@ -1,18 +1,23 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit"
 
-const initialInboxState = {
-    mails: []
+
+const initialEmailState={
+    mails:[],
+    unRead:0
 }
 
-const inboxSlice = createSlice({
-    name : 'inbox',
-    initialState : initialInboxState,
+const mailSlice=createSlice({
+    name:'mail',
+    initialState:initialEmailState,
     reducers:{
-updateInbox(state,action){
-    state.mails = action.payload
-}
+        updateInbox(state,action){
+            state.mails=action.payload
+        },
+        updateUnread(state,action){
+            state.unRead=action.payload
+        }
     }
-})
+});
 
-export const inboxAction=inboxSlice.actions;
-export default inboxSlice.reducer
+export const mailSliceAction=mailSlice.actions;
+export default mailSlice.reducer

@@ -10,7 +10,7 @@ const authSlice=createSlice({
     initialState:initialAuthState,
     reducers:{
         login(state){
-            state.isAuthenicate=true
+            state.isAuthenicate=!!localStorage.getItem('token')
         },
         logout(state){
             localStorage.removeItem('token');

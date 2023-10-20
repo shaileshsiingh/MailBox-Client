@@ -3,7 +3,6 @@ import Form from 'react-bootstrap/Form';
 import classes from './Send.module.css'
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState } from 'draft-js';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
@@ -32,13 +31,16 @@ const SubjectchangeHandler=(e)=>{
     const submitHandler=(e)=>{
         e.preventDefault();
         const sender=localStorage.getItem('email');
+        const sender1=sender.replace(/[@.]/g,'');
         const receiver=email.replace(/['@','.']/g,'');
        // console.log(sender,receiver);
-       fetch(`https://mailbox-ca21f-default-rtdb.firebaseio.com/${sender}.json`,{
+       fetch(`https://mailbox-ca21f-default-rtdb.firebaseio.com/sentbox/${sender1}.json`,{
         method:'POST',
         body:JSON.stringify({
+            to:email,
             subject:subject,
             message:editorState.getCurrentContent().getPlainText()
+           
         }),
         headers:{
             'Content-Type':'application/json'
@@ -48,13 +50,16 @@ const SubjectchangeHandler=(e)=>{
             alert(res.error.message)
         }else{
             console.log('successfull');
+            console.log(sender1);
         }
        })
-       fetch(`https://mailbox-ca21f-default-rtdb.firebaseio.com/${receiver}.json`,{
+       fetch(`https://mailbox-ca21f-default-rtdb.firebaseio.com/inbox/${receiver}.json`,{
         method:'POST',
         body:JSON.stringify({
+            sender:sender,
             subject:subject,
-            message:editorState.getCurrentContent().getPlainText()
+            message:editorState.getCurrentContent().getPlainText(),
+            dot:true
         }),
         headers:{
             'Content-Type':'application/json'
