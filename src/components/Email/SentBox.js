@@ -1,14 +1,13 @@
-
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { mailSliceAction } from '../storeRedux/emailReducer';
-import classes from './SentBox.module.css'
+import classes from './Inbox.module.css'
 
-const SentBox = () => {
+const Inbox = () => {
     const dispatch=useDispatch();
+    const mailInInbox=useSelector(state=>state.mail.mails);
     const [reRender,setreRender]=useState(true)
-    const mailInSentbox=useSelector(state=>state.mail.sendMails);
     const myEmail=localStorage.getItem('email').replace(/['@','.']/g,'');
 
     const deleteHandler=async(id)=>{
@@ -18,9 +17,10 @@ const SentBox = () => {
     const deleteData=await response.json();
     setreRender((prev)=>!prev)
     console.log(deleteData);
+
     }
 
-    
+
 
     let data=[];
 
@@ -34,35 +34,40 @@ const SentBox = () => {
                 data=[{id:key,...mailData[key]},...data]
             }
 
-            dispatch(mailSliceAction.updateSentbox(data))
-          console.log(mailInSentbox,'mailInSentbox');
+            dispatch(mailSliceAction.updateInbox(data))
+          
         }
         fetchDaata();
     },[reRender])
     console.log(data,'data');
   return (
     <div className={classes.main}>
-       {mailInSentbox.length>0 ?
+       {mailInInbox.length>0 ?
   (<div className={classes.row}>
             {
 
-                mailInSentbox.map((item)=>(
+                mailInInbox.map((item)=>(
                     <div className={classes.row1} key={item.id}>
                     <div className={classes.user}>To :- {item.to}</div>
-            <div className={classes.subject}>Subject :- {item.subject}</div>
+
+            <div className={classes.subject}> Sub: {item.subject}</div>
             <div className={classes.msg}>
-                <NavLink to={`/message/${item.id}`}>{'{message}'}</NavLink>
+                <NavLink to={`/message/${item.id}`} style={{textDecoration:'none'}}>{'Message'}</NavLink>
             </div>
-             <div className={classes.delete}>
+           {item.dot && <div className={classes.dot}>
+            {/* //dot logic */}
+            </div>}
+            <div className={classes.delete}>
                 <button onClick={deleteHandler.bind(null,item.id)}>Delete</button>
             </div>
             </div>
                 ))
 
             }
-        </div>) : <p>Sentbox is empty</p>}
+        </div>) :<div className='empty'>  <p>Sentbox is empty</p></div>}
+       
     </div>
   )
 }
 
-export default SentBox
+export default Inbox

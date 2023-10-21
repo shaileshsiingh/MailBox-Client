@@ -6,7 +6,7 @@ import classes from './ReadMsg.module.css';
 
 const ReadMsg = () => {
     const {id}=useParams();
-    const mails=useSelector(state=>state.mail.sendMails)
+    const mails=useSelector(state=>state.mail.mails)
     const myEmail=localStorage.getItem('email').replace(/['@','.']/g,'');
 
     const singleMail=mails.filter((item)=>item.id===id);
@@ -18,6 +18,7 @@ const ReadMsg = () => {
           method:'PATCH',
           body:JSON.stringify({
             dot:false
+            
           }),
           headers:{
             'Content-Type':'application/json'
@@ -27,7 +28,7 @@ const ReadMsg = () => {
         console.log(data);
       }
       fetchData();
-    },[])
+    },[id,myEmail])
 
   return (
     <Fragment>

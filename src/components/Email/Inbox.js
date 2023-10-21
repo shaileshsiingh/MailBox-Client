@@ -49,9 +49,10 @@ const Inbox = () => {
                 mailInInbox.map((item)=>(
                     <div className={classes.row1} key={item.id}>
                     <div className={classes.user}>From :- {item.sender}</div>
-            <div className={classes.subject}>{item.subject}</div>
+
+            <div className={classes.subject}> Sub: {item.subject}</div>
             <div className={classes.msg}>
-                <NavLink to={`/message/${item.id}`} style={{textDecoration:'none'}}>{'{message}'}</NavLink>
+                <NavLink to={`/message/${item.id}`} style={{textDecoration:'none'}}>{'Message'}</NavLink>
             </div>
            {item.dot && <div className={classes.dot}>
             {/* //dot logic */}
